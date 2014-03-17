@@ -7,14 +7,19 @@
     <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
     
     <!-- Use title if it's in the page YAML frontmatter -->
-    <title><%= current_page.data.title || "The Middleman" %></title>
+    <title>Gist #<%= gist_id%></title>
     
-    <%= stylesheet_link_tag "/gists/933e7438d014cb7706a2/fiddle" %>
+    <%= stylesheet_link_tag "/gists/" + gist_id + "/fiddle" %>
 
-    <%= javascript_include_tag "/gists/933e7438d014cb7706a2/fiddle" %>
+    <%= javascript_include_tag "/gists/" + gist_id + "/fiddle" %>
   </head>
   
   <body>
+    <ul>
+      <li><a href="http://jsfiddle.net/gh/gist/library/pure/<%=gist_id%>">Open on jsfiddle.net</a></li>
+      <li>Gist synchronized? <%= gist_is_synchronized gist_id %></li>
+    </ul>
+  
     <%= yield %>
   </body>
 </html>

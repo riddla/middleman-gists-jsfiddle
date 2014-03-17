@@ -27,6 +27,14 @@
 # Proxy pages (http://middlemanapp.com/dynamic-pages/)
 # proxy "/this-page-has-no-template.html", "/template-file.html", :locals => {
 #  :which_fake_page => "Rendering a fake page with a local variable" }
+modules = Dir['source/gists/*']
+puts modules.inspect
+
+modules.map! do |gists_name|
+  gists_name = File.basename(gists_name).gsub(/^[_]+/, '').gsub(/.erb$/, '')
+  puts gists_name
+  proxy "/gists/#{gists_name}/", "/index.html", :locals => { :gist_id => gists_name }
+end
 
 ###
 # Helpers
@@ -51,6 +59,15 @@ helpers do
     path = 'source/gists/' + gist_id + '/fiddle.html'
 
     ERB.new(File.read(path)).result
+  end
+
+  def gist_is_synchronized(gist_id)
+
+    path = 'source/gists/' + gist_id + '/'
+    result = %x{cd #{path}; git status}
+
+    result = %x{cd #{path}; [[ $(git status 2> /dev/null | tail -n1) != "nothing to commit (working directory clean)" ]] && echo "nope!"}
+
   end
 
   def is_debug_view
