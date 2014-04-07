@@ -30,10 +30,20 @@
 modules = Dir['source/gists/*']
 puts modules.inspect
 
-modules.map! do |gists_name|
-  gists_name = File.basename(gists_name).gsub(/^[_]+/, '').gsub(/.erb$/, '')
-  puts gists_name
-  proxy "/gists/#{gists_name}/", "/index.html", :locals => { :gist_id => gists_name }
+modules.map! do |gist_filename|
+  gist_id = File.basename(gist_filename).gsub(/^[_]+/, '').gsub(/.erb$/, '')
+  puts gist_id
+
+  gist_manifest = File.read("source/gists/#{gist_id}/fiddle.manifest")
+
+  gist_manifest_data = Psych.load(gist_manifest)
+
+  puts gist_manifest_data.inspect
+
+  # require 'pry'
+  # binding.pry
+
+  proxy "/gists/#{gist_id}/", "/index.html", :locals => { :gist_id => gist_id, :framework => gist_manifest_data['framework'], :framework_version => gist_manifest_data['framework_version'] }
 end
 
 ###
@@ -65,6 +75,12 @@ helpers do
 
     path = 'source/gists/' + gist_id + '/'
     result = %x{cd #{path}; git status}
+
+    repo = Rugged::Repository.new(path)
+    # repo = Rugged::Index.new(path)
+
+    # require 'pry'
+    # binding.pry
 
     result = %x{cd #{path}; [[ $(git status 2> /dev/null | tail -n1) != "nothing to commit (working directory clean)" ]] && echo "nope!"}
 

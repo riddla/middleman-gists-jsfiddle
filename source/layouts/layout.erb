@@ -2,24 +2,25 @@
 <html>
   <head>
     <meta charset="utf-8">
-    
+
     <!-- Always force latest IE rendering engine or request Chrome Frame -->
     <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
-    
+
     <!-- Use title if it's in the page YAML frontmatter -->
     <title>Gist #<%= gist_id%></title>
-    
-    <%= stylesheet_link_tag "/gists/" + gist_id + "/fiddle" %>
 
-    <%= javascript_include_tag "/gists/" + gist_id + "/fiddle" %>
+    <%= stylesheet_link_tag "/gists/" + gist_id + "/fiddle" if defined?gist_id %>
+
+    <%= javascript_include_tag "/gists/" + gist_id + "/fiddle" if defined?gist_id %>
   </head>
-  
+
   <body>
     <ul>
-      <li><a href="http://jsfiddle.net/gh/gist/library/pure/<%=gist_id%>">Open on jsfiddle.net</a></li>
+      <li><a href="http://jsfiddle.net/gh/gist/<%=framework%>/<%=framework_version%>/<%=gist_id%>">Open on jsfiddle.net</a></li>
+      <li><a href="https://gist.github.com/riddla/<%=gist_id%>">Open on Github</a></li>
       <li>Gist synchronized? <%= gist_is_synchronized gist_id %></li>
     </ul>
-  
+
     <%= yield %>
   </body>
 </html>
