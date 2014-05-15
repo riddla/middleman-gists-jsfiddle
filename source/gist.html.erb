@@ -1,0 +1,11 @@
+<ul id="fiddle_bar">
+	<li><b><%=jsfiddle_details.name%></b></li>
+	<li><a href="http://jsfiddle.net/gh/gist/<%=framework_details.framework%>/<%=framework_details.framework_version%>/<%=gist_id%>">Open on jsfiddle.net</a></li>
+	<li><a href="https://gist.github.com/riddla/<%=gist_id%>">Open on Github</a></li>
+	<li>Gist synchronized? <%= gist_is_synchronized gist_id %></li>
+</ul>
+
+<iframe src="/gist_source/<%=gist_id%>/" frameborder="0">
+</iframe>
+
+

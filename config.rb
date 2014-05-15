@@ -1,3 +1,5 @@
+activate :livereload
+
 ###
 # Compass
 ###
@@ -27,23 +29,30 @@
 # Proxy pages (http://middlemanapp.com/dynamic-pages/)
 # proxy "/this-page-has-no-template.html", "/template-file.html", :locals => {
 #  :which_fake_page => "Rendering a fake page with a local variable" }
-modules = Dir['source/gists/*']
-puts modules.inspect
+gists = Dir['source/gists/*']
+puts @gists.inspect
 
-modules.map! do |gist_filename|
+@gists = []
+
+# require 'openstruct'
+
+gists.map do |gist_filename|
   gist_id = File.basename(gist_filename).gsub(/^[_]+/, '').gsub(/.erb$/, '')
   puts gist_id
 
-  gist_manifest = File.read("source/gists/#{gist_id}/fiddle.manifest")
+  @gists.push(gist_id)
 
-  gist_manifest_data = Psych.load(gist_manifest)
+  YAML_documents = Psych.load_stream(File.read("source/gists/#{gist_id}/fiddle.manifest"))
+  puts YAML_documents.inspect
 
-  puts gist_manifest_data.inspect
+  framework_details = OpenStruct.new YAML_documents[0]
+  jsfiddle_details = OpenStruct.new YAML_documents[1]
 
   # require 'pry'
   # binding.pry
 
-  proxy "/gists/#{gist_id}/", "/index.html", :locals => { :gist_id => gist_id, :framework => gist_manifest_data['framework'], :framework_version => gist_manifest_data['framework_version'] }
+  proxy "/gists/#{gist_id}/", "/gist.html", :locals => { :gist_id => gist_id, :framework_details => framework_details, :jsfiddle_details => jsfiddle_details }, :ignore => true
+  proxy "/gist_source/#{gist_id}/", "/gist_source.html", :layout => false, :locals => { :gist_id => gist_id }, :ignore => true
 end
 
 ###

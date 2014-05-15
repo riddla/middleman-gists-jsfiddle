@@ -6,14 +6,12 @@
 
     <title>Gist #<%= gist_id if defined? gist_id %></title>
 
-    <%= stylesheet_link_tag "normalize" %>
-    <%= stylesheet_link_tag "fiddle_bar" %>
+    <%= stylesheet_link_tag "/gists/" + gist_id + "/fiddle" if defined?gist_id %>
+    <%= javascript_include_tag "/gists/" + gist_id + "/fiddle" if defined?gist_id %>
   </head>
   <body>
 
-    <%= framework_details.to_json %>
-    <%= jsfiddle_details.to_json %>
-
-    <%= yield %>
+    <%= gist gist_id %>
   </body>
 </html>
+
